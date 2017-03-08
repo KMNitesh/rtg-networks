@@ -12,32 +12,22 @@ class Graph:
         Parameters
         ----------
         graph -- a NetworkX graph
-    
+
         """
         self._graph = graph
-        self.nodes = graph.nodes()
-        self.edgelist = graph.edges()
         self.S_Lap = None       # A ScipyMatrix 
         self.S_Adj = None       # A ScipyMatrix
-        self.Lap = None         # A NumpyMatrix
-        self.Adj = None         # A NumpyMatrix
-        self.matrixes = []      # A list of matrixes generated
         self.cached = True
 
     def __repr__(self):
-        pass
+        return "TODO: think about what we want to print"
 
     @property
     def graph(self):
         self.cached = False
         return self._graph
-    
-    def add_matrix(self, matrix):
-        """
-        Add a matrixto the self.matrixes list
-        """
-        self.matrixes.append(matrix)
-        
+       
+    # Clark- Probably want this
     def create_Adj(self):
         """
         Return
@@ -102,12 +92,7 @@ class Graph:
         and containing the same data represented by the sparse matrix
         """
         print(sparse_matrix.todense())
-
-class Matrix:
-    def __init__(self, matrix, edgelist):
-        self.matrix = matrix
-        self.edgelist = edgelist  # An edgelist of the graph
-        
+       
     
 class NumpyMatrix(Matrix):
     def __init__(self, matrix, edgelist):
