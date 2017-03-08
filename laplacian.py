@@ -1,131 +1,40 @@
-
 import networkx as nx
 import numpy as np
-import scipy.sparse as sparse
-from scipy.sparse import linalg
+from scipy import sparse
 import matplotlib.pyplot as plt
 
 
-class Graph:
-    def __init__ (self, graph):
+class GraphLaplacian:
+    def __init__ (self, graph, compute = True):
         """
         Parameters
         ----------
         graph -- a NetworkX graph
-
+        compute -- Boolean, compute eigendecomposition?
         """
         self._graph = graph
-        self.S_Lap = None       # A ScipyMatrix 
-        self.S_Adj = None       # A ScipyMatrix
-        self.cached = True
+        self.laplacian = None
+        self.cached = False
+
+        if compute:
+            self.compute()
 
     def __repr__(self):
         return "TODO: think about what we want to print"
+
+    def compute(self, k):
+        self.laplacian = nx.laplacian_matrix(self._graph)
+        self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.laplacian, k,
+                which = 'SM')
 
     @property
     def graph(self):
         self.cached = False
         return self._graph
-       
-    # Clark- Probably want this
-    def create_Adj(self):
-        """
-        Return
-        ----------
-        Create a NumpyMatrix instance, which is the normalized Adjacency matrix of the graph 
-        Return that instance
-        """
-        self.Adj = np.zeros((len(self.nodes),len(self.nodes)))
-        for i,j in self.edgelist:
-            self.Adj[i,j] = 1
-            self.Adj[j,i] = 1
-        self.Adj = NumpyMatrix(self.Adj, self.edgelist) 
-        self.add_matrix(self.Adj)
-        return self.Adj
-    
-    def create_Lap(self):
-        """
-        Return
-        ----------
-        Create a NumpyMatrix instance, which is the normalized Laplacian matrix of the graph 
-        Return that instance
-        """
-        if self.Adj == None:
-            self.Adj = np.zeros((len(self.nodes),len(self.nodes)))
-            for i,j in self.edgelist:
-                self.Adj[i,j] = 1
-                self.Adj[j,i] = 1
-            self.Adj = NumpyMatrix(self.Adj, self.edgelist) 
-            self.add_matrix(self.Adj)
-        self.Deg = np.diag(self.Adj.matrix.sum(axis=0))
-        self.Lap = self.Deg - self.Adj.matrix 
-        self.Lap = NumpyMatrix(self.Lap, self.edgelist) 
-        self.add_matrix(self.Lap)
-        return self.Lap
-        
-    def create_sparse_Lap (self):
-        """
-        Return
-        ----------
-        Create a ScipyMatrix instance, which is the laplacian matrix of the graph
-        Return that instance
-        """
-        self.S_Lap = ScipyMatrix(nx.laplacian_matrix(self.graph), self.edgelist)
-        self.add_matrix(self.S_Lap)
-        return self.S_Lap
-    
-    def create_sparse_Adj(self):
-        """
-        Return
-        ----------
-        Create a ScipyMatrix instance, which is the adjacency matrix of the graph
-        Return that instance
-        """
-        self.S_Adj = nx.to_scipy_sparse_matrix(self.graph, self.nodes, weight='weight',format='csr')
-        self.S_Adj = ScipyMatrix(self.S_Adj, self.edgelist)
-        self.add_matrix(self.S_Adj)
-        return self.S_Adj
-        
-    def print_scipy(self, sparse_matrix):
-        """
-        Print out a NumPy matrix object with the same shape 
-        and containing the same data represented by the sparse matrix
-        """
-        print(sparse_matrix.todense())
-       
-    
-class NumpyMatrix(Matrix):
-    def __init__(self, matrix, edgelist):
-        Matrix.__init__(self, matrix, edgelist)
-        self.eigvals, self.eigvecs = np.linalg.eig(matrix)  # Find the eigenvalues and eigenvectors for the numpy matrix
-        
+
     def plot_eigenvals(self):
-        """
-        Sort eigvals from smallest to largest and plot them
-        """
-        eigvals_sorted = np.sort(self.eigvals)
-        plt.plot(eigvals_sorted)
-        plt.show() 
-        
-    def plot_edge_eigenvecs(self, p, q):
-        """
-        Scatters the pth and qth eigenvectors of the Laplacian Matrix and plots edges according to edgelist 
-
-        Parameters
-        ----------
-        p --- pth eigenvectors
-        q --- qth eigenvectors
-
-        Notes: eigenvectors are sorted by lowest to highest values of eigenvalues of the numpy matrix
-        """
-        sort_eigvecs = self.eigvecs[:, self.eigvals.argsort()]
-        vec1 = sort_eigvecs[:, p-1]
-        vec2 = sort_eigvecs[:, q-1]
-        plt.scatter(vec1, vec2)
-        for j,k in self.edgelist:
-            plt.plot(vec1[[j,k]],vec2[[j,k]])
-        plt.show()
-
+        plt.plot(self.eigvals)
+      
         
 class ScipyMatrix(Matrix):
     def __init__(self, matrix, edgelist):
