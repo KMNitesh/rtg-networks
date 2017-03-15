@@ -3,8 +3,7 @@ import numpy as np
 from scipy import sparse
 import matplotlib.pyplot as plt
 
-
-class GraphLaplacian:
+class GraphOperator:
     """
     TODO: describe what this does
     """
@@ -17,8 +16,8 @@ class GraphLaplacian:
         """
         self._graph = graph
         self.laplacian = None
+        self.adjacency = None
         self.cached = False
-
         if compute:
             self.compute()
 
@@ -38,11 +37,23 @@ class GraphLaplacian:
         k -- Number of eigenvalues to compute
         **kwargs -- additional arguments to scipy.sparse.linalg.eigsh
         """
-        self.laplacian = nx.laplacian_matrix(self._graph).astype("d")
-        self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.laplacian, k,
-                which = 'SM')
         self.cached = True
-
+        if matrix_type == "laplacian":
+            self.laplacian = nx.laplacian_matrix(self._graph).astype("d")
+            self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.laplacian, k,
+                which = 'SM')
+        elif matrix_type == "adjacency":
+            self.adjacency = nx.adjacency_matrix(self._graph).astype("d")
+            self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.adjacency, k,
+                which = 'SM')
+        elif matrix_type == "normalized laplacian":
+            self.normalized_laplacian = nx.normalized_laplacian_matrix(self._graph).astype("d")
+            self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.normalized_laplacian, k,
+                which = 'SM')     
+        else:
+            self.cached = False
+            raise ValueError("Needs to be one of ... TODO")
+            
     def plot_eigenvals(self):
         """
         Plot eigenvalues from smallest to largest
@@ -51,7 +62,7 @@ class GraphLaplacian:
         plt.xlabel("Index of Eigenvector, smallest to largest")
         plt.ylabel("Eigenvalue")
 
-    def plot_eigenvectors(self, x = 1, y = 2):
+    def plot_eigenvectors(self, p = 2, q = 3):
         """
         Plot eigenvalues from smallest to largest
 
@@ -60,49 +71,19 @@ class GraphLaplacian:
         >>> l = GraphLaplacian(g)
         >>> l.plot_eigenvectors()
         """
-        pass
+        plt.scatter(self.eigvecs[:,p-1],self.eigvecs[:,q-1])
+        vec1 = self.eigvecs[:,p-1]
+        vec2 = self.eigvecs[:,q-1]
+        for j,k in self._graph.edges():
+            plt.plot(vec1[[j,k]],vec2[[j,k]])
 
     @property
     def graph(self):
         self.cached = False
         return self._graph
 
-     
-
 if __name__ == "__main__":
 
     lob = nx.random_lobster(20, 0.6, 0.9, seed = 37)
-    g = GraphLaplacian(lob, compute = False)
-    g2 = GraphLaplacian(lob, compute = True)
-
-
-#def f()
-        
-#class ScipyMatrix(Matrix):
-#    def __init__(self, matrix, edgelist):
-#        Matrix.__init__(self, matrix, edgelist)
-#        self.s_eigvals, self.s_eigvecs = sparse.linalg.eigsh(matrix.asfptype(), k = matrix.shape[0] -1, which = 'SM')
-#        
-#    def plot_eigenvals(self):
-#        plt.plot(self.s_eigvals)
-#        plt.show()
-#        
-#    def plot_edge_eigenvecs(self, p, q):
-#        """
-#        Scatters the pth and qth eigenvectors of the Laplacian Matrix and plots edges according to edgelist 
-#
-#        Parameters
-#        ----------
-#        p --- pth eigenvectors
-#        q --- qth eigenvectors
-#
-#        Notes
-#        ----------
-#        eigenvectors are sorted by lowest to highest values of eigenvalues of the scipy matrix
-#        """        
-#        plt.scatter(self.s_eigvecs[:,p-1],self.s_eigvecs[:,q-1])
-#        vec1 = self.s_eigvecs[:,p-1]
-#        vec2 = self.s_eigvecs[:,q-1]
-#        for j,k in self.edgelist:
-#            plt.plot(vec1[[j,k]],vec2[[j,k]])
-#        plt.show()
+    g = GraphOperator(lob, compute = False)
+    g2 = GraphOperator(lob, compute = True)
