@@ -7,16 +7,18 @@ class GraphOperator:
     """
     TODO: describe what this does
     """
-    def __init__ (self, graph, compute = True):
+    def __init__ (self, graph, matrix_type, compute = True):
         """
         Parameters
         ----------
+        matrix_type -- "combinatorial laplacian", "adjacency", "normalized laplacian"
         graph -- a NetworkX graph
         compute -- Boolean, compute eigendecomposition?
         """
         self._graph = graph
-        self.laplacian = None
+        self.laplacian = None 
         self.adjacency = None
+        self.matrix_type = matrix_type
         self.cached = False
         if compute:
             self.compute()
@@ -26,30 +28,30 @@ class GraphOperator:
                 self._graph)
         return out
 
-    def compute(self, matrix_type = "laplacian", k = 6, **kwargs):
+    def compute(self, k = 6, **kwargs):
         """
         Compute the eigendecomposition for the laplacian and store in
         self.eigvals, self.eigvecs
 
         Parameters
         ----------
-        matrix_type -- "laplacian", "adjacency", TODO
         k -- Number of eigenvalues to compute
         **kwargs -- additional arguments to scipy.sparse.linalg.eigsh
         """
         self.cached = True
-        if matrix_type == "laplacian":
+        if self.matrix_type == "combinatorial laplacian":
             self.laplacian = nx.laplacian_matrix(self._graph).astype("d")
             self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.laplacian, k,
                 which = 'SM')
-        elif matrix_type == "adjacency":
+        elif self.matrix_type == "adjacency":
             self.adjacency = nx.adjacency_matrix(self._graph).astype("d")
             self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.adjacency, k,
                 which = 'SM')
-        elif matrix_type == "normalized laplacian":
+        elif self.matrix_type == "normalized laplacian":
             self.normalized_laplacian = nx.normalized_laplacian_matrix(self._graph).astype("d")
             self.eigvals, self.eigvecs = sparse.linalg.eigsh(self.normalized_laplacian, k,
-                which = 'SM')     
+                which = 'SM')
+          
         else:
             self.cached = False
             raise ValueError("Needs to be one of ... TODO")
@@ -84,6 +86,7 @@ class GraphOperator:
 
 if __name__ == "__main__":
 
-    lob = nx.random_lobster(20, 0.6, 0.9, seed = 37)
-    g = GraphOperator(lob, compute = False)
-    g2 = GraphOperator(lob, compute = True)
+    lob = nx.random_lobster(5, 0.6, 0.9, seed = 37)
+    g = GraphOperator(lob, "combinatorial laplacian", compute = False)
+    g2 = GraphOperator(lob, "combinatorial laplacian", compute = True)
+    g3 = GraphOperator(lob, "normalized laplacian")
