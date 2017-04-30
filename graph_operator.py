@@ -79,6 +79,45 @@ class GraphOperator:
         for j,k in self._graph.edges():
             plt.plot(vec1[[j,k]],vec2[[j,k]])
 
+               
+    def partition(self, standardVal = 0):
+        secondEigVec = self.eigvecs[:,1]
+        A = []
+        B = []
+        for i in range(0, len(secondEigVec)):
+            if (secondEigVec[i] >= standardVal):
+                A.append(i)
+            else:
+                B.append(i)
+        return (A,B)
+    
+    def removeEdge(self, A, B):
+        edgelist = self._graph.edges()
+        for (i,j) in edgelist:
+            if ((i in A and j in B) or (i in B and j in A)):
+                edgelist.remove((i,j))
+        return edgelist
+    
+    def draw_graphWithLabel(self):
+        pos = nx.spring_layout(self._graph)
+        labels = {}
+        for i in range(0, len(self._graph.nodes())):
+            labels[i] = i
+        nx.draw_networkx_nodes(self._graph, pos)
+        nx.draw_networkx_edges(self._graph, pos)
+        nx.draw_networkx_labels(self._graph, pos, lables)
+       
+    def draw_partitionGraph(self, A, B):
+        pos = nx.spring_layout(self._graph)
+        labels = {}
+        for i in range(0, len(self._graph.nodes())):
+            labels[i] = i
+        nx.draw_networkx_nodes(self._graph, pos, nodelist = A, node_color='y')
+        nx.draw_networkx_nodes(self._graph, pos, nodelist = B, node_color='g')
+        nx.draw_networkx_edges(self._graph, pos, edgelist = self.removeEdge(A, B))
+
+            
+            
     @property
     def graph(self):
         self.cached = False
