@@ -55,6 +55,8 @@ class GraphOperator:
         else:
             self.cached = False
             raise ValueError("Needs to be one of ... TODO")
+        
+        self.getLabelsAndPos()
             
     def plot_eigenvals(self):
         """
@@ -98,23 +100,28 @@ class GraphOperator:
                 edgelist.remove((i,j))
         return edgelist
     
+    def getLabelsAndPos(self):
+        self.pos = nx.spring_layout(self._graph)
+        self.labels = {}
+        for i in range(0, len(self._graph.nodes())):
+            self.labels[i] = i
+    
     def draw_graphWithLabel(self):
-        pos = nx.spring_layout(self._graph)
-        labels = {}
-        for i in range(0, len(self._graph.nodes())):
-            labels[i] = i
-        nx.draw_networkx_nodes(self._graph, pos)
-        nx.draw_networkx_edges(self._graph, pos)
-        nx.draw_networkx_labels(self._graph, pos, lables)
+        #  if (self.labels == {}
+        #   self.getLabelsAndPos()
+        
+        nx.draw_networkx_nodes(self._graph, self.pos)
+        nx.draw_networkx_edges(self._graph, self.pos)
+        nx.draw_networkx_labels(self._graph, self.pos, self.labels)
        
-    def draw_partitionGraph(self, A, B):
-        pos = nx.spring_layout(self._graph)
-        labels = {}
-        for i in range(0, len(self._graph.nodes())):
-            labels[i] = i
-        nx.draw_networkx_nodes(self._graph, pos, nodelist = A, node_color='y')
-        nx.draw_networkx_nodes(self._graph, pos, nodelist = B, node_color='g')
-        nx.draw_networkx_edges(self._graph, pos, edgelist = self.removeEdge(A, B))
+    def draw_partitionGraph(self, A, B, colorA = 'y', colorB = 'g'):
+        #if (self.labels == {}):
+        #    self.getLabelsAndPos()
+        
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = A, node_color=colorA)
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB)
+        nx.draw_networkx_edges(self._graph, self.pos, edgelist = self.removeEdge(A, B))
+        nx.draw_networkx_labels(self._graph, self.pos, self.labels)
 
             
             
