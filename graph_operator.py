@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class GraphOperator:
     """
-    TODO: describe what this does
+    Generate a sparse matrix for a graph, and get eigenvalues and eigenvectors
     """
     def __init__ (self, graph, matrix_type, compute = True):
         """
@@ -24,8 +24,8 @@ class GraphOperator:
             self.compute()
 
     def __repr__(self):
-        out = "LaplacianGraph, cached = {}\n{}".format(self.cached,
-                self._graph)
+        out = "Graph, cached = {}\n{}\n{}".format(self.cached,
+                self._graph,self.matrix_type)
         return out
 
     def compute(self, k = 6, **kwargs):
@@ -61,24 +61,23 @@ class GraphOperator:
         Plot eigenvalues from smallest to largest
         """
         plt.plot(self.eigvals)
-        plt.xlabel("Index of Eigenvector, smallest to largest")
+        plt.xlabel("Index of Eigenvalues, smallest to largest")
         plt.ylabel("Eigenvalue")
 
     def plot_eigenvectors(self, p = 2, q = 3):
         """
-        Plot eigenvalues from smallest to largest
-
-        #TODO: plot graph with known 2 clusters (say)
         >>> g = ...
         >>> l = GraphLaplacian(g)
         >>> l.plot_eigenvectors()
         """
         plt.scatter(self.eigvecs[:,p-1],self.eigvecs[:,q-1])
+        plt.xlabel("2nd Eigenvector")
+        plt.ylabel("3rd Eigenvector")
         vec1 = self.eigvecs[:,p-1]
         vec2 = self.eigvecs[:,q-1]
         for j,k in self._graph.edges():
             plt.plot(vec1[[j,k]],vec2[[j,k]])
-
+        
                
     def partition(self, standardVal = 0):
         secondEigVec = self.eigvecs[:,1]
@@ -123,9 +122,4 @@ class GraphOperator:
         self.cached = False
         return self._graph
 
-if __name__ == "__main__":
 
-    lob = nx.random_lobster(5, 0.6, 0.9, seed = 37)
-    g = GraphOperator(lob, "combinatorial laplacian", compute = False)
-    g2 = GraphOperator(lob, "combinatorial laplacian", compute = True)
-    g3 = GraphOperator(lob, "normalized laplacian")
