@@ -105,15 +105,15 @@ class GraphOperator:
         for i in range(0, len(self._graph.nodes())):
             self.labels[i] = i
     
-    def draw_graphWithLabel(self):
+    def draw_graphWithLabel(self, colorA = 'lightsalmon'):
         #  if (self.labels == {}
         #   self.getLabelsAndPos()
         
-        nx.draw_networkx_nodes(self._graph, self.pos)
+        nx.draw_networkx_nodes(self._graph, self.pos, node_color=colorA)
         nx.draw_networkx_edges(self._graph, self.pos)
         nx.draw_networkx_labels(self._graph, self.pos, self.labels)
        
-    def draw_partitionGraph(self, A, B, colorA = 'y', colorB = 'g'):
+    def draw_partitionGraph(self, A, B, colorA = 'gold', colorB = 'palegreen'):
         #if (self.labels == {}):
         #    self.getLabelsAndPos()
         
