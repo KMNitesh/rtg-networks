@@ -117,8 +117,8 @@ class GraphOperator:
         #if (self.labels == {}):
         #    self.getLabelsAndPos()
         
-        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = A, node_color=colorA)
-        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB)
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = A, node_color=colorA, node_size = 30, alpha = 0.5)
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB, node_size = 30, alpha = 0.5)
         nx.draw_networkx_edges(self._graph, self.pos, edgelist = self.removeEdge(A, B))
         nx.draw_networkx_labels(self._graph, self.pos, self.labels)
 
