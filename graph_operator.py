@@ -83,13 +83,14 @@ class GraphOperator:
                
     def partition(self, standardVal = 0):
         secondEigVec = self.eigvecs[:,1]
+        nodes = self._graph.nodes()
         A = []
         B = []
         for i in range(0, len(secondEigVec)):
             if (secondEigVec[i] >= standardVal):
-                A.append(i)
+                A.append(nodes[i])
             else:
-                B.append(i)
+                B.append(nodes[i])
         return (A,B)
     
     def removeEdge(self, A, B):
@@ -102,25 +103,28 @@ class GraphOperator:
     def getLabelsAndPos(self):
         self.pos = nx.spring_layout(self._graph)
         self.labels = {}
-        for i in range(0, len(self._graph.nodes())):
-            self.labels[i] = i
+        nodes = self._graph.nodes()
+        for i in range(0, len(nodes)):
+            self.labels[nodes[i]] = i
     
-    def draw_graphWithLabel(self, colorA = 'lightsalmon'):
+    def draw_graph(self, colorA = 'lightsalmon', labels = True, node_size = 30, alpha = 0.5, width = 1):
         #  if (self.labels == {}
         #   self.getLabelsAndPos()
         
-        nx.draw_networkx_nodes(self._graph, self.pos, node_color=colorA)
-        nx.draw_networkx_edges(self._graph, self.pos)
-        nx.draw_networkx_labels(self._graph, self.pos, self.labels)
+        nx.draw_networkx_nodes(self._graph, self.pos, node_color=colorA, node_size = node_size, alpha = alpha)
+        nx.draw_networkx_edges(self._graph, self.pos, width = width)
+        if (labels):
+            nx.draw_networkx_labels(self._graph, self.pos, self.labels)
        
-    def draw_partitionGraph(self, A, B, colorA = 'gold', colorB = 'palegreen'):
+    def draw_partitionGraph(self, A, B, colorA = 'gold', colorB = 'palegreen', labels = True, node_size = 30, alpha = 0.5, width = 1):
         #if (self.labels == {}):
         #    self.getLabelsAndPos()
         
-        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = A, node_color=colorA, node_size = 30, alpha = 0.5)
-        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB, node_size = 30, alpha = 0.5)
-        nx.draw_networkx_edges(self._graph, self.pos, edgelist = self.removeEdge(A, B))
-        nx.draw_networkx_labels(self._graph, self.pos, self.labels)
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = A, node_color=colorA, node_size = node_size, alpha = alpha)
+        nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB, node_size = node_size, alpha = alpha)
+        nx.draw_networkx_edges(self._graph, self.pos, edgelist = self.removeEdge(A, B), width = width)
+        if (labels):
+            nx.draw_networkx_labels(self._graph, self.pos, self.labels)
 
             
             
