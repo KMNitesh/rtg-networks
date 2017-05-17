@@ -20,6 +20,7 @@ class GraphOperator:
         self.adjacency = None
         self.matrix_type = matrix_type
         self.cached = False
+        self.sgs = []
         if compute:
             self.compute()
 
@@ -95,24 +96,26 @@ class GraphOperator:
     
     def partition(self, n_groups = 2, standardVal = 0):
         """
-        Return a list of groups, each group is a subgraph corresponding to one cluster
+        self.sgs contain GraphOperator objects, each is a subgraph 
+        Return a list of subgroups nodes, each subgraph is corresponding to one cluster
         """
    
-        sgs = [self]
+        self.sgs = [self]
+        self.nsgs = [self._graph]
    
         for i in range(n_groups - 1):
-            sgs.sort(key = lambda x : x._graph.number_of_nodes(), reverse = True)
-            largestgraph = sgs.pop(0)
+            self.sgs.sort(key = lambda x : x._graph.number_of_nodes(), reverse = True)
+            largestgraph = self.sgs.pop(0)
             A, B = largestgraph._split_once(standardVal)
+            largestgraph._removeEdge(A, B)
             g_A = largestgraph._graph.subgraph(A)
             G_A = GraphOperator(g_A, self.matrix_type)
             g_B = largestgraph._graph.subgraph(B)
             G_B = GraphOperator(g_B, self.matrix_type)
-            sgs.extend([G_A, G_B])
-            
-        return [x._graph.nodes() for x in sgs]
+            self.sgs.extend([G_A, G_B])
+        return [x._graph.nodes() for x in self.sgs]
     
-    def removeEdge(self, A, B):
+    def _removeEdge(self, A, B):
         edgelist = self._graph.edges()
         for (i,j) in edgelist:
             if ((i in A and j in B) or (i in B and j in A)):
