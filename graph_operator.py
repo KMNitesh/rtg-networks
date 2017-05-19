@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 from scipy import sparse
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
 class GraphOperator:
     """
@@ -149,8 +150,20 @@ class GraphOperator:
         if (labels):
             nx.draw_networkx_labels(self._graph, self.pos, self.labels)
 
-            
-            
+    def KMeans(self, n_clusters, **kwargs):
+        X = np.array([np.sqrt(eigval) * self.eigvecs[:, i] for i, eigval in enumerate(self.eigvals)]).T
+        return KMeans(n_clusters, **kwargs).fit(X)
+    
+    def KMeans_partition(self, n_clusters):
+        kmeans = self.KMeans(n_clusters)
+        index = np.arange(kmeans.labels_.shape[0])
+        list_nodes = []
+        nodes = self._graph.nodes()
+        for i in range(n_clusters):
+            list_nodes.append([nodes[i] for i in index[kmeans.labels_ == i]])
+        return list_nodes
+
+        
     @property
     def graph(self):
         self.cached = False
