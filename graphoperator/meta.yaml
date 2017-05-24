@@ -1,0 +1,27 @@
+package:
+  name: graphoperator
+  version: "0.0.1"
+
+source:
+  git_rev: 
+  git_url: https://github.com/jsharpna/rtg-networks
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - scipy
+    - matplotlib
+    - sklearn
+
+test:
+  imports:
+    - graphoperator
+
+about:
+  home:
+  license:
+  license_file:

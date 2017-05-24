@@ -4,6 +4,10 @@ from scipy import sparse
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
+
+__all__ = ["GraphOperator"]
+
+
 class GraphOperator:
     """
     Generate a sparse matrix for a graph, and get eigenvalues and eigenvectors
@@ -168,5 +172,3 @@ class GraphOperator:
     def graph(self):
         self.cached = False
         return self._graph
-
-

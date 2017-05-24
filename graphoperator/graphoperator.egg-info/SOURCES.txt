@@ -1,0 +1,9 @@
+README.rst
+setup.cfg
+graphoperator/__init__.py
+graphoperator.egg-info/PKG-INFO
+graphoperator.egg-info/SOURCES.txt
+graphoperator.egg-info/dependency_links.txt
+graphoperator.egg-info/entry_points.txt
+graphoperator.egg-info/requires.txt
+graphoperator.egg-info/top_level.txt
