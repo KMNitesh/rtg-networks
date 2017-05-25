@@ -97,6 +97,8 @@ class GraphOperator:
                 A.append(nodes[i])
             else:
                 B.append(nodes[i])
+                
+        self._removeEdge2(A, B)
         return A, B
     
     def partition(self, n_groups = 2, standardVal = 0):
@@ -119,6 +121,12 @@ class GraphOperator:
             G_B = GraphOperator(g_B, self.matrix_type)
             self.sgs.extend([G_A, G_B])
         return [x._graph.nodes() for x in self.sgs]
+    
+    def _removeEdge2(self, A, B):
+        for (i,j) in self._graph.edges():
+            if ((i in A and j in B) or (i in B and j in A)):
+                self._graph.edges().remove((i,j))
+        return self._graph.edges()
     
     def _removeEdge(self, A, B):
         edgelist = self._graph.edges()
@@ -143,14 +151,19 @@ class GraphOperator:
         if (labels):
             nx.draw_networkx_labels(self._graph, self.pos, self.labels)
        
-    def draw_partitionGraph(self, list_nodes, list_color, labels = True, node_size = 30, alpha = 0.5, width = 1):
+    def draw_partitionGraph(self, list_nodes, list_color, labels = True, node_size = 30, alpha = 0.5, width = 1, removeEdges = False):
         #if (self.labels == {}):
         #    self.getLabelsAndPos()
         
         for i in range(len(list_nodes)):
             nx.draw_networkx_nodes(self._graph, self.pos, nodelist = list_nodes[i], node_color=list_color[i], node_size = node_size, alpha = alpha)
-        #nx.draw_networkx_nodes(self._graph, self.pos, nodelist = B, node_color=colorB, node_size = node_size, alpha = alpha)
-        nx.draw_networkx_edges(self._graph, self.pos, edgelist = self._graph.edges(), width = width)
+        
+        if (removeEdges and len(list_nodes) == 2):
+            nx.draw_networkx_edges(self._graph, self.pos, edgelist = self._removeEdge(list_nodes[0], list_nodes[1]), width = width)
+        else:
+            nx.draw_networkx_edges(self._graph, self.pos, edgelist = self._graph.edges(), width = width)
+        
+        
         if (labels):
             nx.draw_networkx_labels(self._graph, self.pos, self.labels)
 
