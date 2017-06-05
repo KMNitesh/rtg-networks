@@ -39,7 +39,7 @@ which can only occur when $x_i = x_j, \forall i,j$. This contradicts the supposi
 Since $null(L) \subseteq span(\mathbf{1})$ and $span(\mathbf{1}) \subseteq null(L)$, it follows that $null(L) = span(\mathbf{1})$. $\Box$
 
 <h3>Proof of Proposition 1</h3>
-Let $L_i$ be the the Lapacian of the graph defined by the vertices from $C_i$, where $i = 1, \ldots, K$. Then, by reording the points, the Lapacian of a graph with $K$ connected components, denoted $L^K$, can be written as the block diagonal matrix below
+Let $L_i$ be the the Laplacian of the graph defined by the vertices from $C_i$, where $i = 1, \ldots, K$. Then, by reordering the points, the Laplacian of a graph with $K$ connected components, denoted $L^K$, can be written as the block diagonal matrix below
 
 $$
 L^K =
@@ -51,9 +51,9 @@ L^K =
 \end{bmatrix}
 $$
 
-Consider the Lapacian $L^1$ of a graph for which there is only one connected component ($K = 1$).  From **Lemma 1**, it follows that $null(L^1) = span(\mathbf{1}_{C_1})$. 
+Consider the Laplacian $L^1$ of a graph for which there is only one connected component ($K = 1$).  From **Lemma 1**, it follows that $null(L^1) = span(\mathbf{1}_{C_1})$. 
 
-Suppose that the null space of the Lapacian $L^p$ for a graph $G$ with $p$ connected components is the span of the vectors $\mathbf{1}_{C_k}, k=1,\ldots,p$. Then if we write $L^p$ in the form 
+Suppose that the null space of the Laplacian $L^p$ for a graph $G$ with $p$ connected components is the span of the vectors $\mathbf{1}_{C_k}, k=1,\ldots,p$. Then if we write $L^p$ in the form 
 $$
 L^p =
 \begin{bmatrix}
@@ -87,7 +87,7 @@ $$
 $$
 where $1^{C_k}$ is an all 1's vector with the same number of elements as the number of vertices in the connected component $C_k$.
 
-Consider the Lapacian $L^{p+1}$ of a graph with one extra connected component. This can be written in the form
+Consider the Laplacian $L^{p+1}$ of a graph with one extra connected component. This can be written in the form
 $$
 L^{p+1} =
 \begin{bmatrix}
