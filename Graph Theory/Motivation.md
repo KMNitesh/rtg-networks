@@ -1,5 +1,5 @@
 <h1>Motivation for Spectral Methods</h1>
-One natural problem that can arise while investigating a graph $G$ could be to find a partition $\{V_1,\ldots,V_k\}$ of $G$ such that the connectivity, or similarity, of vertices in each group $V_i$ is high and the level of connectivity between groups $V_i$ and $V_j$ is low.  This can be thought of as a problem of sorting vertices from $V$ into different clusters, or communities, of similarity.  Solving this type of problem using only the graph object itself can prove computationally difficult or inefficient.  However, we can overcome this problem by using an object called the <b>Laplacian</b> (See Laplacian.md for more).
+One natural problem that can arise while investigating a graph $G$ could be to find a partition $\{V_1,\ldots,V_k\}$ of $G$ such that the connectivity, or similarity, of vertices in each group $V_i$ is high and the level of connectivity between groups $V_i$ and $V_j$ is low.  This can be thought of as a problem of sorting vertices from $V$ into different clusters, or communities, of similarity.  Solving this type of problem using only the graph object itself can prove computationally difficult or inefficient.  However, we can overcome this problem by using an object called the <b>Laplacian</b>.
 
 For any graph $G$, one can define a matrix, the <b>combinatorial Laplacian</b>, which can be written as 
 $$L = D - W$$
@@ -17,6 +17,9 @@ It immediately follows that the combinatorial Laplacian $L$ is a positive-semide
 <b>Proposition 1</b> tells us that for a graph with $K$ connected components, we can determine which vertices are in which connected component by examining the null space of $L$. In doing so, we can determine a grouping $\{C_k\}_{k=1}^K$ of vertices such that the level of connectivity between groups $C_i$ and $C_j$ is minimized (no edges between them). Because $L^K$ is a positive-semidefinite matrix, this information is stored equivalently in the span of the $K$ smallest eigenvectors of $L^K$.
 
 Spectral methods have shown that when examining the laplacian $L^1$ of a fully connected graph, the $K$ smallest eigenvectors of $L^1$ will give information akin to that of the null space of $L^K$.  That it will help us find a grouping $\{V_k\}_{k=1}^K$ of vertices such that that the level of connectivity between groups $V_i$ and $V_j$ is low (according to some criterion). The methods explored in this repository are called spectral methods because they rely on the spectral decomposition of some similarity matrix of a graph, such as $L$.
+
+
+
 
 <h2>Proof Appendix</h2>
 
